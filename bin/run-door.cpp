@@ -101,9 +101,28 @@ int main(int argc, char** argv)
     AnalogSensor* pressureSensor;
     Motor* motor;
 
-    OutputSwitchGPIOSysfs forwardSwitch(26+512);
-    OutputSwitchGPIOSysfs backwardSwitch(17+512);
+    unsigned int OFFSET_GPIO = 512;
 
+    // Button
+    unsigned int Button_outside_line = 17 + OFFSET_GPIO;
+    unsigned int Button_inside_line = 27 + OFFSET_GPIO;
+
+    // Lightbarrier GPIO lines
+    unsigned int Lightbarrier_closed_line = 22 + OFFSET_GPIO;
+    unsigned int Lightbarrier_open_line = 23 + OFFSET_GPIO;
+
+
+    // Pressure Sensor GPIO lines
+    std::string             PressureSensor_Device = "/dev/i2c-1";
+    uint8_t                 PressureSensor_Adress = 0x76;
+    
+    // Motor stepper GPIO lines
+    std::string             Motor_Device = "/dev/gpiochip0";
+    OutputSwitchGPIOSysfs   Motor_forwardSwitch(26+512);
+    OutputSwitchGPIOSysfs   Motor_backwardSwitch(17+512);
+    std::string             Motor_T_Period = "2000000";
+    std::string             Motor_T_Duty = "1000000";
+    
     if (test)
     {
         // Mock sensors
@@ -124,15 +143,15 @@ int main(int argc, char** argv)
     {
         std::cout << "Info: Real run, using real sensors." << std::endl;
         // create sensors
-        button_outside = new InputSwitchGPIOSysfs(17+512);
-        button_inside = new InputSwitchGPIOSysfs(27+512);
-        lightbarrier_closed  = new InputSwitchGPIOSysfs(22+512);
-        lightbarrier_open  = new InputSwitchGPIOSysfs(23+512);
+        button_outside      = new InputSwitchGPIOSysfs(Button_outside_line);
+        button_inside       = new InputSwitchGPIOSysfs(Button_inside_line);
+        lightbarrier_closed = new InputSwitchGPIOSysfs(Lightbarrier_closed_line);
+        lightbarrier_open   = new InputSwitchGPIOSysfs(Lightbarrier_open_line);
 
         // Pressure Sensor
-        pressureSensor = new BMP280("/dev/i2c-1", 0x76); 
+        pressureSensor      = new BMP280(PressureSensor_Device, PressureSensor_Adress);
 
-        motor = new MotorStepper("/dev/gpiochip0", forwardSwitch, backwardSwitch, "2000000", "1000000");
+        motor               = new MotorStepper(Motor_Device, Motor_forwardSwitch, Motor_backwardSwitch, Motor_T_Period, Motor_T_Duty);
     }
 
     // Pressure Sensor Event Generator
