@@ -1,7 +1,7 @@
 #pragma once
 
 #include <sys/timerfd.h>
-#include "inputs.h"
+#include "input_output_switch/input/inputs.h"
 #include "outputs.h"
 #include "door.h"
 #include "structs.h"

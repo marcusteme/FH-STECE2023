@@ -1,20 +1,22 @@
 #include <door/door.h>
 #include <door/structs.h>
-#include <door/inputs.h>
-#include <door/analog-sensor.h>
-#include <door/analog-sensor-event-generator.h>
-#include <door/outputs.h>
-#include <door/motor-mock.h>
-#include <door/input-switch-mock.h>
-#include <door/analog-sensor-mock.h>
+
+#include <door/input_output_switch/input/inputs.h>
+#include <door/input_output_switch/input/input-switch.h>
+#include <door/input_output_switch/input/input-switch-mock.h>
+#include <door/input_output_switch/input/input-switch-gpio-sysfs.h>
+
+#include <door/input_output_switch/output/outputs.h>
+#include <door/input_output_switch/output/output-switch.h>
+
+#include <door/analog_stuff/sensor/analog-sensor.h>
+#include <door/analog_stuff/sensor/analog-sensor-event-generator.h> 
+#include <door/analog_stuff/sensor/analog-sensor-mock.h>          
+#include <door/analog_stuff/sensor/pressure-sensor-bmp280.h>
+
+#include <door/motor/motor-mock.h>
+
 #include <door/utilities/timespec.h>
-
-#include <door/input-switch.h>
-#include <door/output-switch.h>
-
-#include <door/input-switch-gpio-sysfs.h>
-#include <door/pressure-sensor-bmp280.h>
-//#include <door/motor-stepper.h>
 
 #include <string>
 #include <iostream>
@@ -48,7 +50,7 @@ int main(int argc, char** argv)
     if (argc > 2)
     {
         std::cout << "Error: Too many arguments!" << std::endl;
-        std::cout << "Usage: ./run-door [--test]" << std::endl;
+        std::cout << "Usage: ./run-door [--test/--real]" << std::endl;
         
         return 1;
     }
@@ -68,7 +70,7 @@ int main(int argc, char** argv)
         else
         {
             std::cout << "Error: Invalide argument!" << std::endl;
-            std::cout << "Usage: ./run-door [--test]" << std::endl;
+            std::cout << "Usage: ./run-door [--test/--real]" << std::endl;
 
             return 1;
         }
@@ -76,7 +78,7 @@ int main(int argc, char** argv)
     else 
     {
         std::cout << "Error: Missing argument!" << std::endl;
-        std::cout << "Usage: ./run-door [--test]" << std::endl;
+        std::cout << "Usage: ./run-door [--test/--real]" << std::endl;
         return 1;
     }
 
