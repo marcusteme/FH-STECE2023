@@ -105,7 +105,7 @@ int main(int argc, char** argv)
     unsigned int OFFSET_GPIO = 512;
 
     // Button
-    unsigned int Button_outside_line = 17 + OFFSET_GPIO;
+    unsigned int Button_outside_line = 18 + OFFSET_GPIO;
     unsigned int Button_inside_line = 27 + OFFSET_GPIO;
 
     // Lightbarrier GPIO lines
@@ -121,6 +121,7 @@ int main(int argc, char** argv)
     std::string             Motor_Device = "/dev/gpiochip0";
     std::string             Motor_T_Period = "2000000";
     std::string             Motor_T_Duty = "1000000";
+
     std::unique_ptr<OutputSwitchGPIOSysfs> motor_forward_switch;
     std::unique_ptr<OutputSwitchGPIOSysfs> motor_backward_switch;
     
@@ -152,8 +153,8 @@ int main(int argc, char** argv)
         // Pressure Sensor
         pressureSensor      = new BMP280(PressureSensor_Device, PressureSensor_Adress);
 
-        motor_forward_switch = std::make_unique<OutputSwitchGPIOSysfs>(26 + 512);
-        motor_backward_switch = std::make_unique<OutputSwitchGPIOSysfs>(17 + 512);
+        motor_forward_switch = std::make_unique<OutputSwitchGPIOSysfs>(26 + OFFSET_GPIO);
+        motor_backward_switch = std::make_unique<OutputSwitchGPIOSysfs>(17 + OFFSET_GPIO);
         motor               = new MotorStepper(Motor_Device, *motor_forward_switch, *motor_backward_switch, Motor_T_Period, Motor_T_Duty);
     }
 
