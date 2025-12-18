@@ -19,6 +19,7 @@
 
 #include <string>
 #include <iostream>
+#include <memory>
 #include <signal.h>
 
 // quit flag with atomic type
@@ -118,10 +119,10 @@ int main(int argc, char** argv)
     
     // Motor stepper GPIO lines
     std::string             Motor_Device = "/dev/gpiochip0";
-    OutputSwitchGPIOSysfs   Motor_forwardSwitch(26+512);
-    OutputSwitchGPIOSysfs   Motor_backwardSwitch(17+512);
     std::string             Motor_T_Period = "2000000";
     std::string             Motor_T_Duty = "1000000";
+    std::unique_ptr<OutputSwitchGPIOSysfs> motor_forward_switch;
+    std::unique_ptr<OutputSwitchGPIOSysfs> motor_backward_switch;
     
     if (test)
     {
@@ -151,7 +152,9 @@ int main(int argc, char** argv)
         // Pressure Sensor
         pressureSensor      = new BMP280(PressureSensor_Device, PressureSensor_Adress);
 
-        motor               = new MotorStepper(Motor_Device, Motor_forwardSwitch, Motor_backwardSwitch, Motor_T_Period, Motor_T_Duty);
+        motor_forward_switch = std::make_unique<OutputSwitchGPIOSysfs>(26 + 512);
+        motor_backward_switch = std::make_unique<OutputSwitchGPIOSysfs>(17 + 512);
+        motor               = new MotorStepper(Motor_Device, *motor_forward_switch, *motor_backward_switch, Motor_T_Period, Motor_T_Duty);
     }
 
     // Pressure Sensor Event Generator
