@@ -8,10 +8,6 @@ set(DOOR_FILES
 
   event-edge-detector.cpp
   event-edge-detector.h 
-
-  polling-timer.h
-  polling-timer.cpp
-  
 )
 
 

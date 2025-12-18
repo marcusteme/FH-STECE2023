@@ -2,17 +2,19 @@
 
 #include <sys/timerfd.h>
 #include "eventloop.h"
-#include "timer-expired.h"
 #include "timespec.h"
+
+#include <functional>
+
 
 class PeriodicTimer : public InputHandler
 {
 public:
-    PeriodicTimer(TimeSpec set_time, TimerExpired* timer); //Add ms parameter
+    PeriodicTimer(TimeSpec set_time, std::function<void()>);
     void hookup(Eventloop&);
     EventAction ready(int fd) override;
 
 private:
     int _timer_fd;
-    TimerExpired* _timer;
+    std::function<void()> _expired;
 };
